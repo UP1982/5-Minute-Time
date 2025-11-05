@@ -1,6 +1,6 @@
 # 5-Minute-Time
 
-Five Minute Timer is a lightweight WPF countdown utility that instantly launches a five-minute timer in an always-on-top, semi-transparent window. It includes start/stop controls, a synthesized alarm tone (generated at runtime to avoid shipping binary assets), and a celebratory confetti animation when time runs out.
+A minimal WPF countdown timer for Windows. Press **Start** and the app will count down from five minutes to zero. When the timer finishes an alarm tone plays so you know time is up. Press **Start** again to restart the countdown and stop the alarm.
 
 ## Building a single-file executable
 
