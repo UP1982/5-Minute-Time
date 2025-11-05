@@ -4,7 +4,8 @@ Five Minute Timer is a lightweight WPF countdown utility that instantly launches
 
 ## Building a single-file executable
 
-Publish a self-contained Windows build (no additional installs required) with:
+The project file is configured to publish a Windows 10/11 ready, self-contained single executable.
+You can produce it with:
 
 ```bash
 dotnet publish FiveMinuteTimer/FiveMinuteTimer.csproj \
