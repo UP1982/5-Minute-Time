@@ -1,64 +1,68 @@
 # 5-Minute Time
 
-A transparent, always-on-top countdown timer that immediately starts from five
-minutes, plays an alarm, and fires a celebratory confetti animation when it
-reaches zero. The project is built with [PySide6](https://www.qt.io/qt-for-python)
-and can be packaged into a standalone Windows executable with PyInstaller.
+A native Windows countdown overlay written in modern C++ and Win32 APIs. The
+application immediately begins counting down from five minutes, stays on top of
+other windows with a translucent background, and fills the screen with confetti
+and an audible alert when the timer expires. Optional controls allow the timer
+to be paused or restarted without interrupting its always-on-top behaviour.
 
 ## Features
 
-- Large, easy-to-read timer overlay with drop shadow for visibility on any
-  background.
-- Optional play/pause/reset controls tucked in the lower-right corner.
-- Semi-transparent rounded background that keeps the desktop visible.
-- Confetti celebration overlay and looping alarm tone when time expires.
-- Resizable window with a built-in size grip and drag-to-move support.
+- Large, high-contrast countdown text with a subtle drop shadow for readability.
+- Semi-transparent, resizable window that defaults to the center of the screen
+  and remains topmost while running.
+- Optional pause/resume and reset buttons tucked into the lower-right corner.
+- Animated, full-screen confetti celebration and audible system chime when the
+  timer hits zero.
+- Automatically closes a few seconds after the celebration finishes.
+- Implemented entirely with Win32/GDI so the compiled executable has no runtime
+  dependencies beyond the Windows system libraries.
 
-The alarm tone is synthesized at runtime, so no external audio files are
-required when packaging or distributing the application.
+## Build requirements
 
-## Prerequisites
+- Windows 10 or later
+- [Microsoft Visual Studio](https://visualstudio.microsoft.com/) 2019 or newer
+  with the "Desktop development with C++" workload
+- CMake 3.20+
 
-- Python 3.9+
-- `pip` for installing dependencies
+All required libraries (User32, GDI32, WinMM, Shcore) ship with the Windows SDK
+included in Visual Studio.
 
-Install the runtime dependencies:
+## Configure and build
 
-```bash
-pip install -r requirements.txt
+Open a "x64 Native Tools Command Prompt for VS" and run the following commands
+from the repository root:
+
+```bat
+cmake -S . -B build -A x64 -DCMAKE_BUILD_TYPE=Release
+cmake --build build --config Release
 ```
+
+The resulting standalone executable will be available at:
+
+```
+build\Release\FiveMinuteTimer.exe
+```
+
+Copy that file to any Windows computer to run the timer. No installers or
+additional assets are required.
 
 ## Running the timer
 
-```bash
-python -m app.main
-```
+Double-click the built `FiveMinuteTimer.exe`. The countdown starts immediately.
+When the timer reaches zero, a system alert sound plays and the confetti overlay
+spreads across the entire desktop for a few seconds before the application
+exits on its own.
 
-The countdown starts immediately, keeps the window on top of other
-applications, and exits automatically after the confetti animation finishes.
+### Optional controls
 
-## Building a standalone Windows executable
+- **Pause/Resume** – Toggles the countdown without resetting the remaining time.
+- **Reset** – Returns the countdown to five minutes and restarts it.
+- **Replay** – Appears after the celebration finishes and restarts the timer and
+  celebration.
 
-1. Install PyInstaller (only needs to be done once):
+## Packaging tips
 
-   ```bash
-   pip install pyinstaller
-   ```
-
-2. Generate the executable. Run this from the project root on Windows. The
-   ``--onefile`` flag bundles everything into a single ``.exe`` and
-   ``--collect-all PySide6`` ensures the required Qt multimedia plugins ship
-   inside that executable so the alarm tone plays correctly:
-
-   ```bash
-   pyinstaller app/main.py \
-     --name "5MinuteTimer" \
-     --noconsole \
-     --onefile \
-     --collect-all PySide6
-   ```
-
-3. The compiled `5MinuteTimer.exe` will appear in the `dist/` directory. Copy
-   that file anywhere to launch the timer on another Windows machine—no
-   additional dependencies required.
-
+If you prefer to distribute a single file, you can simply share the
+`FiveMinuteTimer.exe` built in Release mode. Because the project only relies on
+system libraries, no additional DLLs or assets are needed.
