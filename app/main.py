@@ -19,8 +19,10 @@ import wave
 from dataclasses import dataclass
 from typing import List
 
-from PySide6.QtCore import (QElapsedTimer, QPointF, Qt, QTemporaryFile,
-                            QTimer, QUrl)
+from pathlib import Path
+
+from PySide6.QtCore import (QCoreApplication, QElapsedTimer, QPointF, Qt,
+                            QTemporaryFile, QTimer, QUrl)
 from PySide6.QtGui import QColor, QFont, QPainter, QPaintEvent
 from PySide6.QtMultimedia import QSoundEffect
 from PySide6.QtWidgets import (QApplication, QGraphicsDropShadowEffect,
@@ -409,6 +411,16 @@ def main() -> int:
     # before the QApplication instance is constructed.
     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
     QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
+
+    # When packaged as a PyInstaller ``--onefile`` executable the Qt plugin
+    # folder lives inside the temporary extraction directory (``_MEIPASS``).
+    # Explicitly add it to the library path so multimedia backends required
+    # by ``QSoundEffect`` can be located without shipping external files.
+    if getattr(sys, "frozen", False):
+        base_dir = Path(getattr(sys, "_MEIPASS", Path.cwd()))
+        plugin_dir = base_dir / "PySide6" / "plugins"
+        if plugin_dir.exists():
+            QCoreApplication.addLibraryPath(str(plugin_dir))
 
     app = QApplication(sys.argv)
 

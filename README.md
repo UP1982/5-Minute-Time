@@ -45,13 +45,17 @@ applications, and exits automatically after the confetti animation finishes.
    pip install pyinstaller
    ```
 
-2. Generate the executable. Run this from the project root on Windows:
+2. Generate the executable. Run this from the project root on Windows. The
+   ``--onefile`` flag bundles everything into a single ``.exe`` and
+   ``--collect-all PySide6`` ensures the required Qt multimedia plugins ship
+   inside that executable so the alarm tone plays correctly:
 
    ```bash
    pyinstaller app/main.py \
      --name "5MinuteTimer" \
      --noconsole \
-     --onefile
+     --onefile \
+     --collect-all PySide6
    ```
 
 3. The compiled `5MinuteTimer.exe` will appear in the `dist/` directory. Copy
